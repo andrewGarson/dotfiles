@@ -23,12 +23,21 @@ alias h="history"
 alias rm="rm -i"
 alias mv="mv -i"
 alias cp="cp -i"
-alias ls="ls --color=auto"
+alias ls="ls -G"
 alias cls="clear"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
 
 # set prompt, though maybe already done in /etc/bashrc
 #               see man or info pages for special characters (\u, etc.)
-export PS1="\u@\h \W> "
+if [ -f ~/.bash_prompt ]; then
+  . ~/.bash_prompt
+else
+  export PS1="\w\n$ "
+fi
 
 #use vim
 export EDITOR="vim"
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting

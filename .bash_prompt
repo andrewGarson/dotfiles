@@ -1,0 +1,77 @@
+# Colors
+
+# Reset
+Color_Off='\e[0m'       # Text Reset
+
+# Regular Colors
+Black='\e[0;30m'        # Black
+Red='\e[0;31m'          # Red
+Green='\e[0;32m'        # Green
+Yellow='\e[0;33m'       # Yellow
+Blue='\e[0;34m'         # Blue
+Purple='\e[0;35m'       # Purple
+Cyan='\e[0;36m'         # Cyan
+White='\e[0;37m'        # White
+
+# High Intensity
+IBlack='\e[0;90m'       # Black
+IRed='\e[0;91m'         # Red
+IGreen='\e[0;92m'       # Green
+IYellow='\e[0;93m'      # Yellow
+IBlue='\e[0;94m'        # Blue
+IPurple='\e[0;95m'      # Purple
+ICyan='\e[0;96m'        # Cyan
+IWhite='\e[0;97m'       # White
+
+# Colorized Git branch and status
+# ###############################
+
+function parse_git_branch {
+  git_dir= $(git rev-parse --git-dir &> /dev/null)
+  is_git_dir=$?
+  git_status="$(git status 2> /dev/null)"
+  branch_pattern="^# On branch ([^${IFS}]*)"
+  remote_pattern="# Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+  diverge_pattern="# Your branch and (.*) have diverged"
+  
+  if [[ ${is_git_dir} -eq 0 ]]; then
+    if [[ ! ${git_status}} =~ "working directory clean" ]]; then
+      state="${IRed} Z"
+    else 
+      state="${Blue} C"
+    fi
+    # add an else if or two here if you want to get more specific
+    if [[ ${git_status} =~ ${remote_pattern} ]]; then
+      if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
+        remote="${Yellow} ^${IYellow}[${Yellow}${BASH_REMATCH[2]}${IYellow}]"
+      else
+        remote="${Yellow} v${IYellow}[${Yellow}${BASH_REMATCH[2]}${IYellow}]"
+      fi
+    fi
+    if [[ ${git_status} =~ ${diverge_pattern} ]]; then
+      remote="${Yellow} <>"
+    fi
+    if [[ ${git_status} =~ ${branch_pattern} ]]; then
+      branch=${BASH_REMATCH[1]}
+    fi
+    echo " ${BRIGHT_BLUE}(${BRIGHT_CYAN}${branch}${BRIGHT_BLUE})${remote}${state}" 
+  else
+    echo ""
+  fi
+}
+
+# PROMPT
+# ######
+
+function prompt_func() {
+  previous_return_value=$?;
+  prompt="${IBlue}[${Cyan}\u@\h${White}:${IGreen}\w${IBlue}]${IYellow}$(parse_git_branch) \n${Color_Off}"
+  if test $previous_return_value -eq 0
+  then
+    PS1="${prompt}\$ "
+  else
+    PS1="${prompt}${Red}\$${Color_Off} "
+  fi
+}
+
+PROMPT_COMMAND=prompt_func
