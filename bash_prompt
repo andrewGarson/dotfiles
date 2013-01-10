@@ -68,13 +68,16 @@ function parse_git_branch {
 }
 
 function chef_env() {
-  current_env=`cat ~/chef/current`
-  display_color=${Cyan}
-  if [[ ${current_env} == "riot" ]]; then
-    display_color=${Red}
+  if [[ -e ~/chef/current ]]; then
+    current_env=`cat ~/chef/current`
+    display_color=${Cyan}
+    if [[ ${current_env} == "riot" ]]; then
+      display_color=${Red}
+    fi
+    echo " ${Blue}<${display_color}${current_env}${Blue}>"
+  else
+    echo ""
   fi
-
-  echo " ${Blue}<${display_color}${current_env}${Blue}>"
 }
 
 # PROMPT
