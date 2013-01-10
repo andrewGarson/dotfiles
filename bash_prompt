@@ -1,0 +1,84 @@
+# Colors
+
+# Reset
+Color_Off='\[\033[0m\]'       # Text Reset
+
+# Regular Colors
+Black='\[\033[0;30m\]'        # Black
+Red='\[\033[0;31m\]'          # Red
+Green='\[\033[0;32m\]'        # Green
+Yellow='\[\033[0;33m\]'       # Yellow
+Blue='\[\033[0;34m\]'         # Blue
+Purple='\[\033[0;35m\]'       # Purple
+Cyan='\[\033[0;36m\]'         # Cyan
+White='\[\033[0;37m\]'        # White
+
+# High Intensity
+IBlack='\[\033[0;90m\]'       # Black
+IRed='\[\033[0;91m\]'         # Red
+IGreen='\[\033[0;92m\]'       # Green
+IYellow='\[\033[0;93m\]'      # Yellow
+IBlue='\[\033[0;94m\]'        # Blue
+IPurple='\[\033[0;95m\]'      # Purple
+ICyan='\[\033[0;96m\]'        # Cyan
+IWhite='\[\033[0;97m\]'       # White
+
+# Colorized Git branch and status
+# ###############################
+
+function parse_git_branch {
+  git_dir= $(git rev-parse --git-dir &> /dev/null)
+  is_git_dir=$?
+  git_status="$(git status 2> /dev/null)"
+  branch_pattern="^# On branch ([^${IFS}]*)"
+  remote_pattern="# Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+  diverge_pattern="# Your branch and (.*) have diverged"
+  diverge_counts_pattern="and have ([[:digit:]]*) and ([[:digit:]]*) different"
+  
+  if [[ ${is_git_dir} -eq 0 ]]; then
+    if [[ ! ${git_status}} =~ "working directory clean" ]]; then
+      state="${IRed} Z"
+    else 
+      state="${Blue} C"
+    fi
+    # add an else if or two here if you want to get more specific
+    if [[ ${git_status} =~ ${remote_pattern} ]]; then
+      if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
+        remote="${Yellow} ^${IYellow}[${Yellow}${BASH_REMATCH[2]}${IYellow}]"
+      else
+        remote="${Yellow} v${IYellow}[${Yellow}${BASH_REMATCH[2]}${IYellow}]"
+      fi
+    fi
+    if [[ ${git_status} =~ ${diverge_pattern} ]]; then
+      if [[ ${git_status} =~ ${diverge_counts_pattern} ]]; then
+        ahead="${Yellow} ^${IYellow}[${Yellow}${BASH_REMATCH[1]}${IYellow}]"
+        behind="${Yellow} v${IYellow}[${Yellow}${BASH_REMATCH[2]}${IYellow}]"
+        remote="${ahead}${behind}"
+      else
+        remote="${Yellow} <>"
+      fi
+    fi
+    if [[ ${git_status} =~ ${branch_pattern} ]]; then
+      branch=${BASH_REMATCH[1]}
+    fi
+    echo " ${BRIGHT_BLUE}(${BRIGHT_CYAN}${branch}${BRIGHT_BLUE})${remote}${state}" 
+  else
+    echo ""
+  fi
+}
+
+# PROMPT
+# ######
+
+function prompt_func() {
+  previous_return_value=$?;
+  prompt="\n${IBlue}[${Cyan}\u@\h${White}:${IGreen}\w${IBlue}]${IYellow}$(parse_git_branch)\n${Color_Off}"
+  if test $previous_return_value -eq 0
+  then
+    PS1="${prompt}\$ "
+  else
+    PS1="${prompt}${Red}\$${Color_Off} "
+  fi
+}
+
+PROMPT_COMMAND=prompt_func
