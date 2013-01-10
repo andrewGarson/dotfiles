@@ -37,7 +37,7 @@ function parse_git_branch {
   
   if [[ ${is_git_dir} -eq 0 ]]; then
     if [[ ! ${git_status}} =~ "working directory clean" ]]; then
-      state="${IRed} Z"
+      state="${IRed} X"
     else 
       state="${Blue} C"
     fi
@@ -61,10 +61,20 @@ function parse_git_branch {
     if [[ ${git_status} =~ ${branch_pattern} ]]; then
       branch=${BASH_REMATCH[1]}
     fi
-    echo " ${BRIGHT_BLUE}(${BRIGHT_CYAN}${branch}${BRIGHT_BLUE})${remote}${state}" 
+    echo " ${Blue}(${Cyan}${branch}${Blue})${remote}${state}" 
   else
     echo ""
   fi
+}
+
+function chef_env() {
+  current_env=`cat ~/chef/current`
+  display_color=${Cyan}
+  if [[ ${current_env} == "riot" ]]; then
+    display_color=${Red}
+  fi
+
+  echo " ${Blue}<${display_color}${current_env}${Blue}>"
 }
 
 # PROMPT
@@ -72,7 +82,7 @@ function parse_git_branch {
 
 function prompt_func() {
   previous_return_value=$?;
-  prompt="\n${IBlue}[${Cyan}\u@\h${White}:${IGreen}\w${IBlue}]${IYellow}$(parse_git_branch)\n${Color_Off}"
+  prompt="\n${IBlue}[${Cyan}\u@\h${White}:${IGreen}\w${IBlue}]$(chef_env)${IYellow}$(parse_git_branch)\n${Color_Off}"
   if test $previous_return_value -eq 0
   then
     PS1="${prompt}\$ "

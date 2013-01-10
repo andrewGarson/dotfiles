@@ -28,6 +28,7 @@ alias cls="clear"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
+alias eucassh="ruby ~/chef/euca_ssh.rb"
 
 # set prompt, though maybe already done in /etc/bashrc
 #               see man or info pages for special characters (\u, etc.)
@@ -40,4 +41,8 @@ fi
 #use vim
 export EDITOR="vim"
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+PATH=$PATH:$HOME/.rvm/bin:$HOME/scripts # Add RVM to PATH for scripting
+
+# Perforce BS
+export P4PORT=tcp:perflax01:1666
+export P4CHARSET=utf8

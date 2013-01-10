@@ -105,5 +105,3 @@ command Wall wall
 
 " Load pathogen
 call pathogen#infect()
-
-
