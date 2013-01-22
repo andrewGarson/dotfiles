@@ -27,10 +27,12 @@ IWhite='\[\033[0;97m\]'       # White
 # ###############################
 
 function parse_git_branch {
-  git_dir= `git rev-parse --git-dir &> /dev/null`
+  GIT_PROMPT=""
+  git_dir=`git rev-parse --git-dir &> /dev/null`
   is_git_dir=$?
   git_status=`git status 2> /dev/null`
   branch_pattern="^# On branch ([^${IFS}]*)"
+  no_branch_pattern="^# Not currently on any branch."
   remote_pattern="# Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
   diverge_pattern="# Your branch and (.*) have diverged"
   diverge_counts_pattern="and have ([[:digit:]]*) and ([[:digit:]]*) different"
@@ -61,6 +63,10 @@ function parse_git_branch {
     if [[ ${git_status} =~ ${branch_pattern} ]]; then
       branch=${BASH_REMATCH[1]}
     fi
+    if [[ ${git_status} =~ ${no_branch_pattern} ]]; then
+      git_head=`cat .git/HEAD`
+      branch="${git_head}"
+    fi
     GIT_PROMPT=" ${Blue}(${Cyan}${branch}${Blue})${remote}${state}" 
   else
     GIT_PROMPT=""
@@ -68,6 +74,7 @@ function parse_git_branch {
 }
 
 function chef_env() {
+  CHEF_PROMP=""
   if [[ -e ~/chef/current ]]; then
     current_env=`cat ~/chef/current`
     display_color=${Cyan}
