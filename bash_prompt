@@ -28,6 +28,12 @@ IWhite='\[\033[0;97m\]'       # White
 
 function parse_git_branch {
   GIT_PROMPT=""
+  state=""
+  remote=""
+  ahead=""
+  behind=""
+  branch=""
+
   git_dir=`git rev-parse --git-dir &> /dev/null`
   is_git_dir=$?
   git_status=`git status 2> /dev/null`
