@@ -105,3 +105,28 @@ command Wall wall
 
 " Load pathogen
 call pathogen#infect()
+
+" Begin Local Session
+" Make vim look for a .session.vim file in the current directory any time 
+" you load without args
+fu! SaveSess()                                                                                                                                                                                                                                                                                                              
+  execute 'mksession! ' . getcwd() . '/.session.vim'                                                                                                                                                                                                                                                                      
+endfunction                                                                                                                                                                                                                                                                                                                 
+
+fu! RestoreSess()                                                                                                                                                                                                                                                                                                           
+  if filereadable(getcwd() . '/.session.vim')                                                                                                                                                                                                                                                                                 
+    execute 'so ' . getcwd() . '/.session.vim'                                                                                                                                                                                                                                                                              
+    if bufexists(1)                                                                                                                                                                                                                                                                                                         
+      for l in range(1, bufnr('$'))                                                                                                                                                                                                                                                                                       
+        if bufwinnr(l) == -1                                                                                                                                                                                                                                                                                            
+          exec 'sbuffer ' . l                                                                                                                                                                                                                                                                                         
+        endif                                                                                                                                                                                                                                                                                                           
+      endfor                                                                                                                                                                                                                                                                                                              
+    endif                                                                                                                                                                                                                                                                                                                   
+  endif                                                                                                                                                                                                                                                                                                                       
+endfunction                                                                                                                                                                                                                                                                                                                 
+
+autocmd VimLeave * call SaveSess()                                                                                                                                                                                                                                                                                          
+autocmd BufNew * call SaveSess()
+autocmd VimEnter * if argc() == 0 | call RestoreSess()
+" End Local Session 

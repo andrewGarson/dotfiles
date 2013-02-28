@@ -2,10 +2,14 @@ require 'pathname'
 files = Dir.glob("./*").map { |f| Pathname.new(f) }
 
 files.each do |file|
-  puts "FILE: #{file.realpath.to_s}"
   unless file.basename.to_s == "install.rb"
-    `rm ~/.#{file.basename.to_s} -f`
-    `ln -s #{file.realpath.to_s} ~/.#{file.basename.to_s}`
+    dotfile = file.realpath.to_s
+    target = File.expand_path(".#{file.basename.to_s}", "~")
+
+    puts "rm #{target}"
+    `rm #{target} -f`
+    puts "link #{target} -> #{dotfile}"
+    `ln -s #{dotfile} #{target}`
   end
 end
 
