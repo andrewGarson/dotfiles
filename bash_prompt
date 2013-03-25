@@ -80,7 +80,7 @@ function parse_git_branch {
 }
 
 function chef_env() {
-  CHEF_PROMP=""
+  CHEF_PROMPT=""
   if [[ -e ~/chef/current ]]; then
     current_env=`cat ~/chef/current`
     display_color=${Cyan}

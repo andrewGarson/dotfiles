@@ -30,6 +30,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 alias eucassh="ruby ~/chef/euca_ssh.rb"
 alias euca_scp_secret="ruby ~/chef/euca_scp_secret.rb"
+alias b="bundle exec"
 
 # set prompt, though maybe already done in /etc/bashrc
 #               see man or info pages for special characters (\u, etc.)
