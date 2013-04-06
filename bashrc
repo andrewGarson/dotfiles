@@ -50,7 +50,3 @@ export P4CHARSET=utf8
 # Setup rbenv
 export PATH="$PATH:$HOME/.rbenv/bin"
 eval "$(rbenv init -)"
-
-# Setup chefenv
-export PATH="$PATH:$HOME/chef"
-chefenv init
