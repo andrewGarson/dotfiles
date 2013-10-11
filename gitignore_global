@@ -4,3 +4,6 @@
 .vagrant
 TODO
 out
+_temp_space
+Vagrantfile.local
+

@@ -81,16 +81,12 @@ function parse_git_branch {
 
 function chef_env() {
   CHEF_PROMPT=""
-  if [[ -e ~/chef/current ]]; then
-    current_env=`cat ~/chef/current`
+    current_env=`chefenv current`
     display_color=${Cyan}
-    if [[ ${current_env} == "riot" ]]; then
-      display_color=${Red}
-    fi
-    CHEF_PROMPT=" ${Blue}<${display_color}${current_env}${Blue}>"
-  else
-    CHEF_PROMPT=""
+  if [[ ${current_env} == "riot" ]]; then
+    display_color=${Red}
   fi
+    CHEF_PROMPT=" ${Blue}<${display_color}${current_env}${Blue}>"
 }
 
 # PROMPT
@@ -99,14 +95,14 @@ function chef_env() {
 function prompt_func() {
   previous_return_value=$?;
   chef_env
-  parse_git_branch
-  prompt="\n${IBlue}[${Cyan}\u@\h${White}:${IGreen}\w${IBlue}]$CHEF_PROMPT${IYellow}$GIT_PROMPT\n${Color_Off}"
-  if test $previous_return_value -eq 0
-  then
-    PS1="${prompt}\$ "
-  else
-    PS1="${prompt}${Red}\$${Color_Off} "
-  fi
+    parse_git_branch
+    prompt="\n${IBlue}[${Cyan}\u@\h${White}:${IGreen}\w${IBlue}]$CHEF_PROMPT${IYellow}$GIT_PROMPT\n${Color_Off}"
+    if test $previous_return_value -eq 0
+      then
+        PS1="${prompt}\$ "
+    else
+      PS1="${prompt}${Red}\$${Color_Off} "
+        fi
 }
 
 PROMPT_COMMAND=prompt_func
