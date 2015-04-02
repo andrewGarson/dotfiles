@@ -3,3 +3,9 @@ vbell off
 defscrollback 1000
 altscreen on
 
+screen -t "vim" 0 bash -ic 'HISTFILE=~/.bash_history.screen.vim bash'
+screen -t "foreground" 1 bash -ic 'HISTFILE=~/.bash_history.screen.foreground bash'
+screen -t "background" 2 bash -ic 'HISTFILE=~/.bash_history.screen.background bash'
+
+bind c screen bash -ic 'HISTFILE=~/.bash_history.screen.${WINDOW} bash'
+bind ^C screen bash -ic 'HISTFILE=~/.bash_history.screen.${WINDOW} bash'
