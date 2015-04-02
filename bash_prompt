@@ -33,14 +33,15 @@ function parse_git_branch {
   ahead=""
   behind=""
   branch=""
+  stash=""
 
   git_dir=`git rev-parse --git-dir &> /dev/null`
   is_git_dir=$?
   git_status=`git status 2> /dev/null`
-  branch_pattern="^# On branch ([^${IFS}]*)"
+  branch_pattern="^On branch ([^${IFS}]*)"
   no_branch_pattern="^# Not currently on any branch."
-  remote_pattern="# Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
-  diverge_pattern="# Your branch and (.*) have diverged"
+  remote_pattern="Your branch is (ahead|behind).*by ([[:digit:]]*) commit"
+  diverge_pattern="Your branch and (.*) have diverged"
   diverge_counts_pattern="and have ([[:digit:]]*) and ([[:digit:]]*) different"
   
   if [[ ${is_git_dir} -eq 0 ]]; then
@@ -73,7 +74,13 @@ function parse_git_branch {
       git_head=`cat .git/HEAD`
       branch="${git_head}"
     fi
-    GIT_PROMPT=" ${Blue}(${Cyan}${branch}${Blue})${remote}${state}" 
+
+    stash_size=`git stash list | wc -l 2> /dev/null | sed -e 's/^[ \t]*//'`
+    if [[ "${stash_size}" != "0" ]]; then
+      stash="${Purple} |${Blue}${stash_size}${Purple}|"
+    fi 
+
+    GIT_PROMPT=" ${Blue}(${Cyan}${branch}${Blue})${remote}${stash}${state}" 
   else
     GIT_PROMPT=""
   fi
@@ -100,7 +107,7 @@ function prompt_func() {
   previous_return_value=$?;
   chef_env
   parse_git_branch
-  prompt="\n${IBlue}[${Cyan}\u@\h${White}:${IGreen}\w${IBlue}]$CHEF_PROMPT${IYellow}$GIT_PROMPT\n${Color_Off}"
+  prompt="\n${IBlue}[${Cyan}\u${White}:${IGreen}\w${IBlue}]$CHEF_PROMPT${IYellow}$GIT_PROMPT\n${Color_Off}"
   if test $previous_return_value -eq 0
   then
     PS1="${prompt}\$ "
@@ -109,4 +116,4 @@ function prompt_func() {
   fi
 }
 
-PROMPT_COMMAND=prompt_func
+PROMPT_COMMAND='prompt_func'
