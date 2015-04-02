@@ -102,6 +102,7 @@ highlight Folded ctermfg=red
 " Add aliases for all the commands I keep holding shift down too long for
 command W w
 command Wall wall
+cabbrev all wall
 
 " Load pathogen
 call pathogen#infect()
@@ -130,3 +131,8 @@ autocmd VimLeave * call SaveSess()
 autocmd BufNew * call SaveSess()
 autocmd VimEnter * if argc() == 0 | call RestoreSess()
 " End Local Session 
+
+set noerrorbells visualbell t_vb=
+if has('autocmd')
+  autocmd GUIEnter * set visualbell t_vb=
+endif
