@@ -25,7 +25,6 @@ alias mv="mv -i"
 alias cp="cp -i"
 alias ls="ls -G"
 alias cls="clear"
-alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
 alias eucassh="ruby ~/chef/euca_ssh.rb"
@@ -50,3 +49,31 @@ export P4CHARSET=utf8
 # Setup rbenv
 export PATH="$PATH:$HOME/.rbenv/bin"
 eval "$(rbenv init -)"
+export ANDROID_HOME=/Users/andrew/development/android-sdk-macosx/
+export PATH=/Users/andrew/development/android-sdk-macosx/tools:$PATH
+
+# Setup GO installed by Homebrew
+export GOPATH=$HOME/go
+export PATH="$PATH:$GOPATH/bin"
+export PATH="$PATH:/usr/local/opt/go/libexec"
+
+preexec () { 
+  if [ -d "$1" ]; then
+    cd $1
+    return 0;
+  else
+    :;
+  fi
+}
+preexec_invoke_exec () {
+  [ -n "$COMP_LINE" ] && return  # do nothing if completing
+  [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
+  local this_command=`HISTTIMEFORMAT= history 1 | sed -e "s/^[ ]*[0-9]*[ ]*//"`;
+  preexec "$this_command"
+}
+trap 'preexec_invoke_exec' DEBUG
+
+
+
+
+export PATH="$HOME/.node/bin:$PATH"
