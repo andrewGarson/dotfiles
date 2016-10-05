@@ -78,3 +78,15 @@ export PATH="$HOME/.node/bin:$PATH"
 export DOCKER_HOST=tcp://192.168.59.103:2376
 export DOCKER_CERT_PATH=/Users/andrew/.boot2docker/certs/boot2docker-vm
 export DOCKER_TLS_VERIFY=1
+
+export PATH=/Users/andrew/development/ingrope:$PATH
+
+LUNCHY_DIR=$(dirname `gem which lunchy`)/../extras
+if [ -f $LUNCHY_DIR/lunchy-completion.bash ]; then
+  . $LUNCHY_DIR/lunchy-completion.bash
+fi
+
+#docker-machine status default | grep Running &> /dev/null 
+#if [ $? -eq 0 ]; then
+#  eval "$(docker-machine env default)"
+#fi

@@ -20,7 +20,7 @@ filetype indent on
 
 " Allow folding.
 set foldenable
-set foldmethod=syntax
+set foldmethod=indent
 set foldlevelstart=99
 " Show line numbers.
 set number
@@ -33,7 +33,6 @@ set scrolloff=5
 set smartindent
 filetype indent on
 
-" Set tabs to width 4.
 set softtabstop=2
 set tabstop=2
 set shiftwidth=2
@@ -52,14 +51,9 @@ augroup Spacing
     autocmd FileType help,make match BadSpacing /  *$/
 augroup END
 
-" Highlight search terms.
-set hlsearch
-
-" Search as you type.
-set incsearch
-
-" Display command and location status.
-set ruler
+set hlsearch " Highlight search terms.
+set incsearch " Search as you type.
+set ruler " Display command and location status.
 set showcmd
 
 " Multiple windows are equally sized and open in reading order.
@@ -78,33 +72,23 @@ if !has('gui_running')
     set t_Co=8 t_md=
 endif
 
-" Enable syntax highlighting.
 syntax enable
+syn sync fromstart " Force vim to sync syntax highlighting from the beginning of the file.
 
-" Force vim to sync syntax highlighting from the beginning of the file.
-syn sync fromstart
-
-" Set the color scheme to desert.
 colorscheme desert
 
-" set font to consolas size 11
-set gfn=Consolas:h11:cANSI
+set gfn=Consolas:h11:cANSI " set font to consolas size 11
 
-" Automatically reload the .vimrc when changes are made to it
-au! BufWritePost .vimrc source %
+au! BufWritePost .vimrc source % " Automatically reload the .vimrc when changes are made to it
 
-" Treat Gemfile as ruby
 au BufNewFile,BufRead Gemfile set filetype=ruby
 
-" Make code highlights red
 highlight Folded ctermfg=red
 
 " Add aliases for all the commands I keep holding shift down too long for
-command W w
-command Wall wall
-cabbrev all wall
+command! W w
+command! Wall wall
 
-" Load pathogen
 call pathogen#infect()
 
 " Begin Local Session
@@ -136,3 +120,25 @@ set noerrorbells visualbell t_vb=
 if has('autocmd')
   autocmd GUIEnter * set visualbell t_vb=
 endif
+
+let g:NERDTreeShowHidden=1
+
+" setup to use vim-flavored-markdown plugin which is an extension
+" of tpope's vim-markdown (both needed) to get syntax highlighting for
+" github flavored markdown instead of standard
+augroup markdown
+  au!
+  au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+augroup END
+
+" setup for vim-markdown-preview plugin that lets you hit Ctrl-P
+" to launch current markdown file in a browser - because we want
+" github flavor we need to `pip install grip` to get the correct
+" engine and then tell the plugin to use grip
+"
+" When setting up grip you need to generate a github personal access token
+" with an empty scope and then run
+" grip --pass <TOKEN>
+let vim_markdown_preview_github=1
+
+
