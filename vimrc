@@ -90,7 +90,6 @@ highlight Folded ctermfg=red
 command! W w
 command! Wall wall
 
-call pathogen#infect()
 
 " Begin Local Session
 " Make vim look for a .session.vim file in the current directory any time 
@@ -121,6 +120,10 @@ set noerrorbells visualbell t_vb=
 if has('autocmd')
   autocmd GUIEnter * set visualbell t_vb=
 endif
+
+" Begin plugin configuration
+
+call pathogen#infect()
 
 let g:NERDTreeShowHidden=1
 
