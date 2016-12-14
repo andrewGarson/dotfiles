@@ -20,7 +20,8 @@ filetype indent on
 
 " Allow folding.
 set foldenable
-set foldmethod=indent
+" set foldmethod=indent if you see performance issues - you won't be able to fold but vim will work
+set foldmethod=syntax 
 set foldlevelstart=99
 " Show line numbers.
 set number

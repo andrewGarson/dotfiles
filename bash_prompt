@@ -45,7 +45,7 @@ function parse_git_branch {
   diverge_counts_pattern="and have ([[:digit:]]*) and ([[:digit:]]*) different"
   
   if [[ ${is_git_dir} -eq 0 ]]; then
-    if [[ ! ${git_status}} =~ "working directory clean" ]]; then
+    if [[ ! ${git_status}} =~ "working tree clean" ]]; then
       state="${IRed} X"
     else 
       state="${Blue} C"
