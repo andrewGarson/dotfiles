@@ -30,6 +30,7 @@ alias ....="cd ../../.."
 alias eucassh="ruby ~/chef/euca_ssh.rb"
 alias euca_scp_secret="ruby ~/chef/euca_scp_secret.rb"
 alias b="bundle exec"
+alias swaps="find . -type f -name *.sw[op]"
 
 # set prompt, though maybe already done in /etc/bashrc
 #               see man or info pages for special characters (\u, etc.)
@@ -82,9 +83,9 @@ trap 'preexec_invoke_exec' DEBUG
 
 export PATH="$HOME/.node/bin:$PATH"
 
-export DOCKER_HOST=tcp://192.168.59.103:2376
-export DOCKER_CERT_PATH=/Users/andrew/.boot2docker/certs/boot2docker-vm
-export DOCKER_TLS_VERIFY=1
+###export DOCKER_HOST=tcp://192.168.59.103:2376
+###export DOCKER_CERT_PATH=/Users/andrew/.boot2docker/certs/boot2docker-vm
+###export DOCKER_TLS_VERIFY=1
 
 export PATH=/Users/andrew/development/ingrope:$PATH
 
@@ -108,3 +109,7 @@ autoenv_init
 #if [ -f ./.env ]; then
 #fi
 
+
+
+# Use brew installed openssl before using the system one
+export PATH=/usr/local/opt/openssl/bin:$PATH
