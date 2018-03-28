@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# Kill this commit if the only thing in the message is the Branch name that we put in there
+# via the prepare-commit-msg hook before opening the file
+
+# if you are getting unexpected results then you should uncomment the hexdump steps
+# and the echo statements below to see exactly which characters you are comparing
+
+BRANCH=`git branch | grep '^\*' | cut -b3-` # | hexdump -C`
+FILE=`cat "$1" | sed '/^#/ d' | tr '[:space:]' ' ' | sed 's/ //g'` # | hexdump -C`
+
+#echo "BRANCH: $BRANCH"
+#echo "FILE:   $FILE"
+
+if [ "$BRANCH" == "$FILE" ]; then
+  echo 'Commit Cancelled - Your message must contain more than just the branch name and whitespace'
+  exit 1
+else
+  exit 0
+fi

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+BRANCH=`git branch | grep '^\*' | cut -b3-`
+FILE=`cat "$1"`
+echo "$BRANCH\n\n$FILE" > "$1"
