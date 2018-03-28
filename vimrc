@@ -91,16 +91,39 @@ command! W w
 command! Wall wall
 
 
+fu GetSessionFilePath()
+  let l:sessions_dir = getcwd() . '/.vimsessions'
+  if !isdirectory(l:sessions_dir)
+    call mkdir(l:sessions_dir)
+  endif
+
+  if(isdirectory(getcwd() . '/.git')) 
+    " add a . on the end so that we can append session.vim to the name later
+    " and end up with branch.session.vim for git folders and just plain old
+    " session.vim for non git by setting l:current_branch to ''
+    let l:current_branch = systemlist("git rev-parse --abbrev-ref HEAD")[0] . '.'
+  else
+    let l:current_branch = ''
+  endif
+
+  return l:sessions_dir . '/' . l:current_branch . 'session.vim'
+
+endfunction
+
 " Begin Local Session
 " Make vim look for a .session.vim file in the current directory any time 
 " you load without args
 fu! SaveSess()                                                                                                                                                                                                                                                                                                              
-  execute 'mksession! ' . getcwd() . '/.session.vim'                                                                                                                                                                                                                                                                      
+  let l:session_file_path = GetSessionFilePath()
+  execute 'mksession! ' . l:session_file_path
 endfunction                                                                                                                                                                                                                                                                                                                 
 
 fu! RestoreSess()                                                                                                                                                                                                                                                                                                           
-  if filereadable(getcwd() . '/.session.vim')                                                                                                                                                                                                                                                                                 
-    execute 'so ' . getcwd() . '/.session.vim'                                                                                                                                                                                                                                                                              
+
+  let l:session_file_path = GetSessionFilePath()
+
+  if filereadable(l:session_file_path)                                                                                                                                                                                                                                                                                 
+    execute 'so ' . l:session_file_path                                                                                                                                                                                                                                                                              
     if bufexists(1)                                                                                                                                                                                                                                                                                                         
       for l in range(1, bufnr('$'))                                                                                                                                                                                                                                                                                       
         if bufwinnr(l) == -1                                                                                                                                                                                                                                                                                            
@@ -135,6 +158,18 @@ augroup markdown
   au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
 augroup END
 
+" vim -b : edit binary using xxd-format!
+augroup Binary
+  au!
+  au BufReadPre  *.mp4 let &bin=1
+  au BufReadPost *.mp4 if &bin | %!xxd -g 1
+  au BufReadPost *.mp4 set ft=xxd | endif
+  au BufWritePre *.mp4 if &bin | %!xxd -r
+  au BufWritePre *.mp4 endif
+  au BufWritePost *.mp4 if &bin | %!xxd -g 1
+  au BufWritePost *.mp4 set nomod | endif
+augroup END
+
 " setup for vim-markdown-preview plugin that lets you hit Ctrl-P
 " to launch current markdown file in a browser - because we want
 " github flavor we need to `pip install grip` to get the correct
@@ -145,4 +180,9 @@ augroup END
 " grip --pass <TOKEN>
 let vim_markdown_preview_github=1
 
+" let the vim-javascript plugin do syntax highlighting on js/ng doc
+let g:javascript_plugin_jsdoc = 1
+let g:javascript_plugin_ngdoc = 1
 
+" disable concealing characters in JSON
+let g:vim_json_syntax_conceal = 0
