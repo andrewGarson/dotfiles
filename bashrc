@@ -52,18 +52,18 @@ export PATH="$PATH:$HOME/.rbenv/bin"
 eval "$(rbenv init -)"
 
 
-# Setup Java/Android Development
-export ANT_HOME=/usr/local/opt/ant
-export MAVEN_HOME=/usr/local/opt/maven
-export GRADLE_HOME=/usr/local/opt/gradle
-export ANDROID_HOME=/usr/local/opt/android-sdk/
-export ANDROID_NDK_HOME=/usr/local/opt/android-ndk
-export PATH=${ANDROID_HOME}/build-tools/$(ls $ANDROID_HOME/build-tools | sort | tail -1):${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${GRADLE_HOME}/bin:${MAVEN_HOME}/bin:${ANT_HOME}/bin:$PATH
+## # Setup Java/Android Development
+## export ANT_HOME=/usr/local/opt/ant
+## export MAVEN_HOME=/usr/local/opt/maven
+## export GRADLE_HOME=/usr/local/opt/gradle
+## export ANDROID_HOME=/usr/local/opt/android-sdk/
+## export ANDROID_NDK_HOME=/usr/local/opt/android-ndk
+## export PATH=${ANDROID_HOME}/build-tools/$(ls $ANDROID_HOME/build-tools | sort | tail -1):${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/tools:${GRADLE_HOME}/bin:${MAVEN_HOME}/bin:${ANT_HOME}/bin:$PATH
 
-# Setup GO installed by Homebrew
-export GOPATH=$HOME/go
-export PATH="$PATH:$GOPATH/bin"
-export PATH="$PATH:/usr/local/opt/go/libexec"
+## # Setup GO installed by Homebrew
+## export GOPATH=$HOME/go
+## export PATH="$PATH:$GOPATH/bin"
+## export PATH="$PATH:/usr/local/opt/go/libexec"
 
 preexec () { 
   if [ -d "$1" ]; then
@@ -102,14 +102,19 @@ fi
 # Put /usr/local/bin before /usr/bin because we want anything from Homebrew to have priority
 export PATH=/usr/local/bin:$PATH
 
-# source activate.sh from python autoenv project (automatically runs .env scripts in any directory)
-source /usr/local/bin/activate.sh
-# when this shell starts, if there is a .env file execute it through autoenv - autoenv misses scripts if a shell is started in the directory in question
-autoenv_init
-#if [ -f ./.env ]; then
-#fi
+## # source activate.sh from python autoenv project (automatically runs .env scripts in any directory)
+## source /usr/local/bin/activate.sh
+## # when this shell starts, if there is a .env file execute it through autoenv - autoenv misses scripts if a shell is started in the directory in question
+## autoenv_init
+## #if [ -f ./.env ]; then
+## #fi
 
 
 
 # Use brew installed openssl before using the system one
 export PATH=/usr/local/opt/openssl/bin:$PATH
+
+
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
