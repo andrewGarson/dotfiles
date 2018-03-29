@@ -96,6 +96,9 @@ command! Wall wall
 "   silent! some_command
 "   redir END
 
+" Begin Local Session
+" Make vim look for a session file in the current directory any time 
+" you load without args
 fu! GetSessionFilePath()
   let l:sessions_dir = getcwd() . '/.vimsessions'
   if !isdirectory(l:sessions_dir)
@@ -115,9 +118,6 @@ fu! GetSessionFilePath()
 
 endfunction
 
-" Begin Local Session
-" Make vim look for a session file in the current directory any time 
-" you load without args
 fu! SaveSess()                                                                                                                                                                                                                                                                                                              
   " Don't save the session if we opened the git commit message file -- we
   " probably don't want to lose our workspace while doing a commit
@@ -128,9 +128,7 @@ fu! SaveSess()
 endfunction                                                                                                                                                                                                                                                                                                                 
 
 fu! RestoreSess()                                                                                                                                                                                                                                                                                                           
-
   let l:session_file_path = GetSessionFilePath()
-
   if filereadable(l:session_file_path)                                                                                                                                                                                                                                                                                 
     execute 'so ' . l:session_file_path                                                                                                                                                                                                                                                                              
     if bufexists(1)                                                                                                                                                                                                                                                                                                         
