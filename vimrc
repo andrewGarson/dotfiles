@@ -90,8 +90,13 @@ highlight Folded ctermfg=red
 command! W w
 command! Wall wall
 
+" NOTE: If you need to store the output of an internal command in a variable
+" you can do the following
+"   redir => variable_name
+"   silent! some_command
+"   redir END
 
-fu GetSessionFilePath()
+fu! GetSessionFilePath()
   let l:sessions_dir = getcwd() . '/.vimsessions'
   if !isdirectory(l:sessions_dir)
     call mkdir(l:sessions_dir)
@@ -111,11 +116,15 @@ fu GetSessionFilePath()
 endfunction
 
 " Begin Local Session
-" Make vim look for a .session.vim file in the current directory any time 
+" Make vim look for a session file in the current directory any time 
 " you load without args
 fu! SaveSess()                                                                                                                                                                                                                                                                                                              
-  let l:session_file_path = GetSessionFilePath()
-  execute 'mksession! ' . l:session_file_path
+  " Don't save the session if we opened the git commit message file -- we
+  " probably don't want to lose our workspace while doing a commit
+  if argv()[0] !~ '\.git\/COMMIT_EDITMSG$'
+    let l:session_file_path = GetSessionFilePath()
+    execute 'mksession! ' . l:session_file_path
+  endif
 endfunction                                                                                                                                                                                                                                                                                                                 
 
 fu! RestoreSess()                                                                                                                                                                                                                                                                                                           
