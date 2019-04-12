@@ -2,7 +2,7 @@
 set nocompatible
 
 " Make tab-completion work more like bash.
-set wildmenu
+set wildmenu 
 set wildmode=list:full
 
 " Ignore certain file extensions when tab-completing.
@@ -121,7 +121,9 @@ endfunction
 fu! SaveSess()                                                                                                                                                                                                                                                                                                              
   " Don't save the session if we opened the git commit message file -- we
   " probably don't want to lose our workspace while doing a commit
-  if argv()[0] !~ '\.git\/COMMIT_EDITMSG$'
+  if argc() == 1 && (argv()[0] =~ '\.git\/COMMIT_EDITMSG$' || argv()[0] =~ '\.git\/MERGE_MSG$')
+    return
+  else
     let l:session_file_path = GetSessionFilePath()
     execute 'mksession! ' . l:session_file_path
   endif
@@ -193,3 +195,7 @@ let g:javascript_plugin_ngdoc = 1
 
 " disable concealing characters in JSON
 let g:vim_json_syntax_conceal = 0
+
+" disable syntastic checking for html files since angular does lots of non
+" standard html tags
+let g:syntastic_mode_map = { "mode": "active", "passive_filetypes": ["html"] }

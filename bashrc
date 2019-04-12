@@ -114,6 +114,8 @@ export PATH=/usr/local/bin:$PATH
 # Use brew installed openssl before using the system one
 export PATH=/usr/local/opt/openssl/bin:$PATH
 
+# Add brew coreutils to path
+export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
 
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
