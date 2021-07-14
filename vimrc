@@ -154,10 +154,8 @@ if has('autocmd')
 endif
 
 " Begin plugin configuration
-
-call pathogen#infect()
-
 let g:NERDTreeShowHidden=1
+autocmd VimEnter * NERDTree | wincmd p " launch nerdtree automatically and move cursor back to other window
 
 " setup to use vim-flavored-markdown plugin which is an extension
 " of tpope's vim-markdown (both needed) to get syntax highlighting for
@@ -170,13 +168,13 @@ augroup END
 " vim -b : edit binary using xxd-format!
 augroup Binary
   au!
-  au BufReadPre  *.mp4 let &bin=1
-  au BufReadPost *.mp4 if &bin | %!xxd -g 1
-  au BufReadPost *.mp4 set ft=xxd | endif
-  au BufWritePre *.mp4 if &bin | %!xxd -r
-  au BufWritePre *.mp4 endif
-  au BufWritePost *.mp4 if &bin | %!xxd -g 1
-  au BufWritePost *.mp4 set nomod | endif
+  au BufReadPre  *.bin let &bin=1
+  au BufReadPost *.bin if &bin | %!xxd -g 1
+  au BufReadPost *.bin set ft=xxd | endif
+  au BufWritePre *.bin if &bin | %!xxd -r
+  au BufWritePre *.bin endif
+  au BufWritePost *.bin if &bin | %!xxd -g 1
+  au BufWritePost *.bin set nomod | endif
 augroup END
 
 " setup for vim-markdown-preview plugin that lets you hit Ctrl-P
@@ -199,3 +197,17 @@ let g:vim_json_syntax_conceal = 0
 " disable syntastic checking for html files since angular does lots of non
 " standard html tags
 let g:syntastic_mode_map = { "mode": "active", "passive_filetypes": ["html"] }
+
+
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)

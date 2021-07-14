@@ -82,6 +82,7 @@ preexec_invoke_exec () {
 trap 'preexec_invoke_exec' DEBUG
 
 export PATH="$HOME/.node/bin:$PATH"
+export PATH="/usr/local/sbin:$PATH"
 
 ###export DOCKER_HOST=tcp://192.168.59.103:2376
 ###export DOCKER_CERT_PATH=/Users/andrew/.boot2docker/certs/boot2docker-vm
@@ -120,3 +121,10 @@ export PATH=/usr/local/opt/coreutils/libexec/gnubin:$PATH
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+# Add chromium depot_tools to Path
+export PATH="$PATH:$HOME/development/depot_tools"
+
+export PATH="$PATH:$HOME/tools"
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
